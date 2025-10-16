@@ -12,3 +12,44 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb051feaee9657e498a3b6e19b077ad9, type: 3}
   m_Name: MainConfig
   m_EditorClassIdentifier: 
+  <Quads>k__BackingField:
+  - Sprite: {fileID: 21300000, guid: 6d61b52e1d1865a47bcde69cec9f3555, type: 3}
+    Id: 1
+  - Sprite: {fileID: 21300000, guid: 01e0f025339c0164189c6491631eef73, type: 3}
+    Id: 2
+  - Sprite: {fileID: 21300000, guid: 8972cbe1df4089443b23b0facabaf73d, type: 3}
+    Id: 3
+  - Sprite: {fileID: 21300000, guid: 0d7d9dce2271d4049b69e4d8d8ed3547, type: 3}
+    Id: 4
+  - Sprite: {fileID: 21300000, guid: cc8c5d0a8db5b7345a9fd90c6308fb8a, type: 3}
+    Id: 5
+  - Sprite: {fileID: 21300000, guid: 735f1b4cb04e4af41a65e7b3d6790aa2, type: 3}
+    Id: 6
+  - Sprite: {fileID: 21300000, guid: 95092e1649262494885ae6513e8caa71, type: 3}
+    Id: 7
+  - Sprite: {fileID: 21300000, guid: fc2ef3334837db94ba498eebcedbadb0, type: 3}
+    Id: 8
+  - Sprite: {fileID: 21300000, guid: f48ca3b0fbc59984791478a32230d2d5, type: 3}
+    Id: 9
+  - Sprite: {fileID: 21300000, guid: 48ecea2abfbd38f4293672649f9ed42d, type: 3}
+    Id: 10
+  - Sprite: {fileID: 21300000, guid: d7ea60908a5d07d4cbbd1ee6d8da7d38, type: 3}
+    Id: 11
+  - Sprite: {fileID: 21300000, guid: 7ff264eefd35524428c9ba761656829a, type: 3}
+    Id: 12
+  - Sprite: {fileID: 21300000, guid: eae08c85ccfb05a4a9751efd9ed503bf, type: 3}
+    Id: 13
+  - Sprite: {fileID: 21300000, guid: 6e1218909defbec40a5d05ef1ca74b46, type: 3}
+    Id: 14
+  - Sprite: {fileID: 21300000, guid: 1e6469698aeecfd43882c9e5f230a998, type: 3}
+    Id: 15
+  - Sprite: {fileID: 21300000, guid: 83d36934d8deab54fb50e3214c8342ae, type: 3}
+    Id: 16
+  - Sprite: {fileID: 21300000, guid: 72a011ba36fb541499968f1550c910f5, type: 3}
+    Id: 17
+  - Sprite: {fileID: 21300000, guid: c9b5f05b7c65f1b489dbaf3311b8d158, type: 3}
+    Id: 18
+  - Sprite: {fileID: 21300000, guid: 721af848c39229f4f8ea824c2a843617, type: 3}
+    Id: 19
+  - Sprite: {fileID: 21300000, guid: 7bc02c84528b8544a95fbf0ef17afa00, type: 3}
+    Id: 20
