@@ -1,10 +1,18 @@
 using UnityEngine;
 
 [DefaultExecutionOrder(-1)]
-public class Bootstrap : MonoBehaviour
+public sealed class Bootstrap : MonoBehaviour
 {
+    [SerializeField]
+    private UIView uiModel;
+
+    [SerializeField]
+    private MainGameConfig gameConfig;
+
     private void Awake()
     {
-        
+        var uiHandler = uiModel.GetHandler(gameConfig.Quads);
+
+        uiHandler.FillContent();
     }
 }

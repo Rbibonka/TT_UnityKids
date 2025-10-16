@@ -4,5 +4,5 @@ using UnityEngine;
 public sealed class MainGameConfig : ScriptableObject
 {
     [field: SerializeField]
-    public Sprite[] Quads { get; private set; }
+    public QuadConfig[] Quads { get; private set; }
 }
