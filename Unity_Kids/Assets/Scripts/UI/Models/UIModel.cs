@@ -1,27 +1,33 @@
 using UnityEngine;
+using Handlers;
+using Configs;
+using Objects;
 
-public sealed class UIModel : MonoBehaviour
+namespace Models
 {
-    [SerializeField]
-    private ScrollBarModel scrollBarModel;
-
-    [SerializeField]
-    private QuadButtonModel quadButtonModel;
-
-    private UIHandler uiHandler;
-
-    private ScrollBarHandler scrollBarHandler;
-
-    public UIHandler GetHandler(QuadConfig[] quads)
+    public sealed class UIModel : MonoBehaviour
     {
-        if (uiHandler == null || !uiHandler.IsInitilized)
+        [SerializeField]
+        private ScrollBarModel scrollBarModel;
+
+        [SerializeField]
+        private Canvas canvas;
+
+        private UIHandler uiHandler;
+
+        private ScrollBarHandler scrollBarHandler;
+
+        public UIHandler GetHandler(QuadConfig[] quads, QuadObject quadButtonObject, QuadSocketObject quadSocketObject)
         {
-            scrollBarHandler = scrollBarModel.GetHandler();
+            if (uiHandler == null || !uiHandler.IsInitilized)
+            {
+                scrollBarHandler = scrollBarModel.GetHandler();
 
-            uiHandler = new();
-            uiHandler.Initialize(quadButtonModel, scrollBarHandler, quads);
+                uiHandler = new();
+                uiHandler.Initialize(quadButtonObject, quadSocketObject, scrollBarHandler, quads, canvas);
+            }
+
+            return uiHandler;
         }
-
-        return uiHandler;
     }
 }

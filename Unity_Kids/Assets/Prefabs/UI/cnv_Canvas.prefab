@@ -481,7 +481,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scrollBarModel: {fileID: 6788637272172162988}
-  quadButtonModel: {fileID: 7432447551300147560, guid: 9ebfcbf803527d74b8e36b7269605692, type: 3}
+  canvas: {fileID: 1648298201098813526}
 --- !u!223 &1648298201098813526
 Canvas:
   m_ObjectHideFlags: 0

@@ -1,31 +1,67 @@
 using UnityEngine;
+using Objects;
+using Configs;
+using System;
 
-public class QuadHanlder
+namespace Handlers
 {
-    private QuadConfig[] quads;
-    private QuadButtonModel quadButtonModel;
-
-    public QuadButtonModel[] quadButtons { get; private set; }
-
-    public void Initialize(QuadButtonModel quadButtonModel, QuadConfig[] quads)
+    public sealed class QuadsHanlder : IDisposable
     {
-        this.quadButtonModel = quadButtonModel;
-        this.quads = quads;
-    }
+        private QuadConfig[] quads;
+        private Canvas canvas;
+        private QuadObject quadObject;
+        private QuadSocketObject quadSocketObject;
 
-    public void CreateQuadButtons()
-    {
-        quadButtons = new QuadButtonModel[quads.Length];
+        public QuadSocketObject[] QuadSocketObjects { get; private set; }
 
-        for (int i = 0; i < quads.Length; i++)
+        public event Action<int> QuadSocketReleased;
+
+        public void Initialize(QuadObject quadObject, QuadSocketObject quadSocketObject, QuadConfig[] quads, Canvas canvas)
         {
-            var newButtonQuad = GameObject.Instantiate(quadButtonModel);
-            newButtonQuad.Initialize(quads[i].Sprite, i);
-            newButtonQuad.SetDefaultSprite();
+            this.quadObject = quadObject;
+            this.quadSocketObject = quadSocketObject;
+            this.quads = quads;
+            this.canvas = canvas;
+        }
 
-            newButtonQuad.gameObject.SetActive(false);
+        public void CreateQuadSockets()
+        {
+            QuadSocketObjects = new QuadSocketObject[quads.Length];
 
-            quadButtons[i] = newButtonQuad;
+            for (int i = 0; i < quads.Length; i++)
+            {
+                var newQuadSocketObject = GameObject.Instantiate(quadSocketObject);
+                newQuadSocketObject.Initialize(i, quads[i].Sprite, canvas, quadObject);
+                newQuadSocketObject.CreateQuad();
+                newQuadSocketObject.gameObject.SetActive(false);
+                newQuadSocketObject.SocketRelease += OnQuadSocketReleased;
+
+                QuadSocketObjects[i] = newQuadSocketObject;
+            }
+        }
+
+        public void DeactivateButtonQuads()
+        {
+            
+        }
+
+        public void ActivateButtonQuads()
+        {
+            
+        }
+
+        public void CreateQuadBlock(int quadId)
+        {
+            
+        }
+
+        private void OnQuadSocketReleased(int quadButtonModel)
+        {
+            QuadSocketReleased?.Invoke(quadButtonModel);
+        }
+
+        public void Dispose()
+        {
         }
     }
 }

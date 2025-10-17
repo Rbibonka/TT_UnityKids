@@ -1,4 +1,6 @@
 using UnityEngine;
+using Models;
+using Configs;
 
 [DefaultExecutionOrder(-1)]
 public sealed class Bootstrap : MonoBehaviour
@@ -11,7 +13,7 @@ public sealed class Bootstrap : MonoBehaviour
 
     private void Awake()
     {
-        var uiHandler = uiModel.GetHandler(gameConfig.Quads);
+        var uiHandler = uiModel.GetHandler(gameConfig.Quads, gameConfig.QuadObject, gameConfig.QuadSocketObject);
 
         uiHandler.Loop();
     }

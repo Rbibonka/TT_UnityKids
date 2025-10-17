@@ -1,24 +1,42 @@
+using Objects;
 using UnityEngine;
+using UnityEngine.UI;
 
-public sealed class ScrollBarHandler
+namespace Handlers
 {
-    private RectTransform contentParent;
-
-    public bool IsInitilized { get; private set; }
-
-    public void Initialize(RectTransform contentParent)
+    public sealed class ScrollBarHandler
     {
-        this.contentParent = contentParent;
+        private RectTransform contentParent;
 
-        IsInitilized = true;
-    }
+        private ScrollRect scrollRect;
 
-    public void FillQuadButtons(QuadButtonModel[] quadButtons)
-    {
-        foreach (var quadButton in quadButtons)
+        public bool IsInitilized { get; private set; }
+
+        public void Initialize(RectTransform contentParent, ScrollRect scrollRect)
         {
-            quadButton.transform.SetParent(contentParent, false);
-            quadButton.gameObject.SetActive(true);
+            this.contentParent = contentParent;
+            this.scrollRect = scrollRect;
+
+            IsInitilized = true;
+        }
+
+        public void FillQuadButtons(QuadSocketObject[] quadSockets)
+        {
+            foreach (var quadSocket in quadSockets)
+            {
+                quadSocket.transform.SetParent(contentParent, false);
+                quadSocket.gameObject.SetActive(true);
+            }
+        }
+
+        public void Deactivate()
+        {
+            scrollRect.horizontal = false;
+        }
+
+        public void Activate()
+        {
+            scrollRect.horizontal = true;
         }
     }
 }

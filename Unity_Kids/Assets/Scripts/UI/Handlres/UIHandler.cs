@@ -1,32 +1,49 @@
+using Configs;
+using Objects;
 using UnityEngine;
 
-public sealed class UIHandler
+namespace Handlers
 {
-    private ScrollBarHandler scrollBarHandler;
-
-    private QuadHanlder quadHanlder;
-
-    private QuadConfig[] quads;
-
-    public bool IsInitilized { get; private set; }
-
-    public void Initialize(QuadButtonModel quadButtonModel, ScrollBarHandler scrollBarHandler, QuadConfig[] quads)
+    public sealed class UIHandler
     {
-        this.scrollBarHandler = scrollBarHandler;
-        this.quads = quads;
+        private ScrollBarHandler scrollBarHandler;
 
-        quadHanlder = new();
-        quadHanlder.Initialize(quadButtonModel, quads);
-    }
+        private QuadsHanlder quadsHandler;
 
-    public void Loop()
-    {
-        CreateButtonsQuad();
-    }
+        public bool IsInitilized { get; private set; }
 
-    private void CreateButtonsQuad()
-    {
-        quadHanlder.CreateQuadButtons();
-        scrollBarHandler.FillQuadButtons(quadHanlder.quadButtons);
+        public void Initialize(QuadObject quadButtonObject, QuadSocketObject quadSocketObject, ScrollBarHandler scrollBarHandler, QuadConfig[] quads, Canvas canvas)
+        {
+            this.scrollBarHandler = scrollBarHandler;
+
+            quadsHandler = new();
+            quadsHandler.Initialize(quadButtonObject, quadSocketObject, quads, canvas);
+
+            quadsHandler.QuadSocketReleased += OnQuadSocketReleased;
+        }
+
+        public void Loop()
+        {
+            CreateButtonsQuad();
+        }
+
+        private void CreateButtonsQuad()
+        {
+            quadsHandler.CreateQuadSockets();
+            scrollBarHandler.FillQuadButtons(quadsHandler.QuadSocketObjects);
+        }
+
+        private void QuadButtonClick(int quadButtonId)
+        {
+           // quadsHandler.CreateQuadBlock(quadButtonId);
+            //quadsHandler.DeactivateButtonQuads();
+
+            //scrollBarHandler.Deactivate();
+        }
+
+        private void OnQuadSocketReleased(int quadButtonId)
+        {
+            quadsHandler.CreateQuadBlock(quadButtonId);
+        }
     }
 }

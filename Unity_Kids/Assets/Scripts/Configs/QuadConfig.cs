@@ -1,8 +1,11 @@
 using System;
 using UnityEngine;
 
-[Serializable]
-public struct QuadConfig
+namespace Configs
 {
-    public Sprite Sprite;
+    [Serializable]
+    public struct QuadConfig
+    {
+        public Sprite Sprite;
+    }
 }
