@@ -5,6 +5,4 @@ using UnityEngine;
 public struct QuadConfig
 {
     public Sprite Sprite;
-
-    public int Id;
 }

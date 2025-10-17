@@ -4,7 +4,7 @@ using UnityEngine;
 public sealed class Bootstrap : MonoBehaviour
 {
     [SerializeField]
-    private UIView uiModel;
+    private UIModel uiModel;
 
     [SerializeField]
     private MainGameConfig gameConfig;
@@ -13,6 +13,6 @@ public sealed class Bootstrap : MonoBehaviour
     {
         var uiHandler = uiModel.GetHandler(gameConfig.Quads);
 
-        uiHandler.FillContent();
+        uiHandler.Loop();
     }
 }

@@ -1,9 +1,12 @@
 using UnityEngine;
 
-public sealed class UIView : MonoBehaviour
+public sealed class UIModel : MonoBehaviour
 {
     [SerializeField]
-    private ScrollBarView scrollBarView;
+    private ScrollBarModel scrollBarModel;
+
+    [SerializeField]
+    private QuadButtonModel quadButtonModel;
 
     private UIHandler uiHandler;
 
@@ -13,10 +16,10 @@ public sealed class UIView : MonoBehaviour
     {
         if (uiHandler == null || !uiHandler.IsInitilized)
         {
-            scrollBarHandler = scrollBarView.GetHandler(quads);
+            scrollBarHandler = scrollBarModel.GetHandler();
 
             uiHandler = new();
-            uiHandler.Initialize(scrollBarHandler);
+            uiHandler.Initialize(quadButtonModel, scrollBarHandler, quads);
         }
 
         return uiHandler;

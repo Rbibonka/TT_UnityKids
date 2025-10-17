@@ -4,26 +4,21 @@ public sealed class ScrollBarHandler
 {
     private RectTransform contentParent;
 
-    private QuadConfig[] quads;
-    private QuadButtonView buttonQuadPrefab;
-
     public bool IsInitilized { get; private set; }
 
-    public void Initialize(RectTransform contentParent, QuadConfig[] quads, QuadButtonView buttonQuadPrefab)
+    public void Initialize(RectTransform contentParent)
     {
         this.contentParent = contentParent;
-        this.buttonQuadPrefab = buttonQuadPrefab;
-        this.quads = quads;
 
         IsInitilized = true;
     }
 
-    public void FillQuadButtons()
+    public void FillQuadButtons(QuadButtonModel[] quadButtons)
     {
-        foreach (var quad in quads)
+        foreach (var quadButton in quadButtons)
         {
-            var newButtonQuad = GameObject.Instantiate(buttonQuadPrefab, contentParent);
-            newButtonQuad.Initialize(quad.Sprite, quad.Id);
+            quadButton.transform.SetParent(contentParent, false);
+            quadButton.gameObject.SetActive(true);
         }
     }
 }

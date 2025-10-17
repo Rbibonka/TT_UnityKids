@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public sealed class ScrollBarView : MonoBehaviour
+public sealed class ScrollBarModel : MonoBehaviour
 {
     [SerializeField]
     private RectTransform contentParent;
@@ -9,17 +9,14 @@ public sealed class ScrollBarView : MonoBehaviour
     [SerializeField]
     private ScrollRect scrollRect;
 
-    [SerializeField]
-    private QuadButtonView buttonQuad;
-
     private ScrollBarHandler scrollBarHandler;
 
-    public ScrollBarHandler GetHandler(QuadConfig[] quads)
+    public ScrollBarHandler GetHandler()
     {
         if (scrollBarHandler == null || !scrollBarHandler.IsInitilized)
         {
             scrollBarHandler = new();
-            scrollBarHandler.Initialize(contentParent, quads, buttonQuad);
+            scrollBarHandler.Initialize(contentParent);
         }
 
         return scrollBarHandler;

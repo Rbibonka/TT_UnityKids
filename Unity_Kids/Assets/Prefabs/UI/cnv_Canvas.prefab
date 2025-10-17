@@ -480,7 +480,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15f34f31a94b51a46a2f005106696c76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scrollBarView: {fileID: 6057863078465248096}
+  scrollBarModel: {fileID: 6788637272172162988}
+  quadButtonModel: {fileID: 7432447551300147560, guid: 9ebfcbf803527d74b8e36b7269605692, type: 3}
 --- !u!223 &1648298201098813526
 Canvas:
   m_ObjectHideFlags: 0
@@ -914,14 +915,14 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 4420930516841614871, guid: dc14fe6085202854ab155af8b73b9014, type: 3}
   m_PrefabInstance: {fileID: 3352614504095883121}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &6057863078465248096 stripped
+--- !u!114 &6788637272172162988 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8833594612109345809, guid: dc14fe6085202854ab155af8b73b9014, type: 3}
+  m_CorrespondingSourceObject: {fileID: 8120258965012050141, guid: dc14fe6085202854ab155af8b73b9014, type: 3}
   m_PrefabInstance: {fileID: 3352614504095883121}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fa607a35f76e9e14c9d730571156f84d, type: 3}
+  m_Script: {fileID: 11500000, guid: 24889bdc41f0d294eaccc500bd4890a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
