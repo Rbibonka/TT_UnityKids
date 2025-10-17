@@ -11,17 +11,24 @@ namespace Handlers
         private Canvas canvas;
         private QuadObject quadObject;
         private QuadSocketObject quadSocketObject;
+        private Transform releasedQuadsParent;
 
         public QuadSocketObject[] QuadSocketObjects { get; private set; }
 
-        public event Action<int> QuadSocketReleased;
+        public event Action<QuadObject> QuadSocketReleased;
 
-        public void Initialize(QuadObject quadObject, QuadSocketObject quadSocketObject, QuadConfig[] quads, Canvas canvas)
+        public void Initialize(
+            QuadObject quadObject,
+            QuadSocketObject quadSocketObject,
+            QuadConfig[] quads,
+            Canvas canvas,
+            Transform releasedQuadsParent)
         {
             this.quadObject = quadObject;
             this.quadSocketObject = quadSocketObject;
             this.quads = quads;
             this.canvas = canvas;
+            this.releasedQuadsParent = releasedQuadsParent;
         }
 
         public void CreateQuadSockets()
@@ -50,14 +57,14 @@ namespace Handlers
             
         }
 
-        public void CreateQuadBlock(int quadId)
+        public void MoveQuadBlock(QuadObject quad)
         {
-            
+            quad.transform.SetParent(releasedQuadsParent);
         }
 
-        private void OnQuadSocketReleased(int quadButtonModel)
+        private void OnQuadSocketReleased(QuadObject quad)
         {
-            QuadSocketReleased?.Invoke(quadButtonModel);
+            QuadSocketReleased?.Invoke(quad);
         }
 
         public void Dispose()

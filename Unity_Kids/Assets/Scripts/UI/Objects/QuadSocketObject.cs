@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System;
 using UnityEngine;
 
@@ -10,7 +11,9 @@ namespace Objects
         private Canvas canvas;
         private QuadObject quadObject;
 
-        public event Action<int> SocketRelease;
+        private QuadObject currentQuadObject;
+
+        public event Action<QuadObject> SocketRelease;
 
         public void Initialize(int quadSocketId, Sprite quadSprite, Canvas canvas, QuadObject quadObject)
         {
@@ -22,9 +25,22 @@ namespace Objects
 
         public void CreateQuad()
         {
-            var newQuadObject = Instantiate(quadObject, transform);
-            newQuadObject.Initialize(quadSocketId, canvas);
-            newQuadObject.SetSprite(quadSprite);
+            currentQuadObject = Instantiate(quadObject, transform);
+            currentQuadObject.Initialize(quadSocketId, canvas);
+            currentQuadObject.SetSprite(quadSprite);
+
+            currentQuadObject.Release += OnReleased;
+        }
+
+        private void OnReleased(QuadObject quadObject)
+        {
+            currentQuadObject.Release -= OnReleased;
+            currentQuadObject = null;
+
+            CreateQuad();
+            currentQuadObject.SpawnAnimation();
+
+            SocketRelease.Invoke(quadObject);
         }
     }
 }

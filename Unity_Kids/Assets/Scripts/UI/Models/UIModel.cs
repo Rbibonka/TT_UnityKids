@@ -13,6 +13,9 @@ namespace Models
         [SerializeField]
         private Canvas canvas;
 
+        [SerializeField]
+        private Transform releasedQuadsParent;
+
         private UIHandler uiHandler;
 
         private ScrollBarHandler scrollBarHandler;
@@ -24,7 +27,7 @@ namespace Models
                 scrollBarHandler = scrollBarModel.GetHandler();
 
                 uiHandler = new();
-                uiHandler.Initialize(quadButtonObject, quadSocketObject, scrollBarHandler, quads, canvas);
+                uiHandler.Initialize(quadButtonObject, quadSocketObject, scrollBarHandler, quads, canvas, releasedQuadsParent);
             }
 
             return uiHandler;

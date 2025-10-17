@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb051feaee9657e498a3b6e19b077ad9, type: 3}
   m_Name: MainConfig
   m_EditorClassIdentifier: 
-  <QuadButtonObject>k__BackingField: {fileID: 7432447551300147560, guid: 9ebfcbf803527d74b8e36b7269605692, type: 3}
-  <QuadBlockObject>k__BackingField: {fileID: 1275520806110566466, guid: f05cd9aedbe2f0340af26125a3437705, type: 3}
+  <QuadObject>k__BackingField: {fileID: 3317269620493276236, guid: 71becccc444ed4048baa19f351056cdd, type: 3}
+  <QuadSocketObject>k__BackingField: {fileID: 5967652883620684563, guid: 05def0e7e46281b4a95864dc0e329250, type: 3}
   <Quads>k__BackingField:
   - Sprite: {fileID: 21300000, guid: 6d61b52e1d1865a47bcde69cec9f3555, type: 3}
   - Sprite: {fileID: 21300000, guid: 01e0f025339c0164189c6491631eef73, type: 3}

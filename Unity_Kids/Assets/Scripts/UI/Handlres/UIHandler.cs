@@ -12,12 +12,20 @@ namespace Handlers
 
         public bool IsInitilized { get; private set; }
 
-        public void Initialize(QuadObject quadButtonObject, QuadSocketObject quadSocketObject, ScrollBarHandler scrollBarHandler, QuadConfig[] quads, Canvas canvas)
+        private QuadsBuilder quadsBuilder;
+
+        public void Initialize(
+            QuadObject quadButtonObject,
+            QuadSocketObject quadSocketObject,
+            ScrollBarHandler scrollBarHandler,
+            QuadConfig[] quads,
+            Canvas canvas,
+            Transform releasedQuadsParent)
         {
             this.scrollBarHandler = scrollBarHandler;
 
             quadsHandler = new();
-            quadsHandler.Initialize(quadButtonObject, quadSocketObject, quads, canvas);
+            quadsHandler.Initialize(quadButtonObject, quadSocketObject, quads, canvas, releasedQuadsParent);
 
             quadsHandler.QuadSocketReleased += OnQuadSocketReleased;
         }
@@ -33,17 +41,9 @@ namespace Handlers
             scrollBarHandler.FillQuadButtons(quadsHandler.QuadSocketObjects);
         }
 
-        private void QuadButtonClick(int quadButtonId)
+        private void OnQuadSocketReleased(QuadObject quadButtonId)
         {
-           // quadsHandler.CreateQuadBlock(quadButtonId);
-            //quadsHandler.DeactivateButtonQuads();
-
-            //scrollBarHandler.Deactivate();
-        }
-
-        private void OnQuadSocketReleased(int quadButtonId)
-        {
-            quadsHandler.CreateQuadBlock(quadButtonId);
+            quadsHandler.MoveQuadBlock(quadButtonId);
         }
     }
 }
