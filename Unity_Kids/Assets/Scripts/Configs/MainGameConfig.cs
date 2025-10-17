@@ -1,8 +1,19 @@
+using Objects;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "MainConfig", menuName = "Game/MainConfig", order = 51)]
-public sealed class MainGameConfig : ScriptableObject
+namespace Configs
 {
-    [field: SerializeField]
-    public QuadConfig[] Quads { get; private set; }
+    [CreateAssetMenu(fileName = "MainConfig", menuName = "Game/MainConfig", order = 51)]
+    public sealed class MainGameConfig : ScriptableObject
+    {
+        [field: SerializeField]
+        public QuadObject QuadObject { get; private set; }
+
+        [field: SerializeField]
+        public QuadSocketObject QuadSocketObject { get; private set; }
+
+        [field: SerializeField]
+        public QuadConfig[] Quads { get; private set; }
+
+    }
 }

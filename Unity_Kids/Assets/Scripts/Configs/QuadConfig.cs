@@ -1,10 +1,11 @@
 using System;
 using UnityEngine;
 
-[Serializable]
-public struct QuadConfig
+namespace Configs
 {
-    public Sprite Sprite;
-
-    public int Id;
+    [Serializable]
+    public struct QuadConfig
+    {
+        public Sprite Sprite;
+    }
 }
