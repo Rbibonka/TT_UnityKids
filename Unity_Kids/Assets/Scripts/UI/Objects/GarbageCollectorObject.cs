@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class GarbageCollectorObject : MonoBehaviour
+public sealed class GarbageCollectorObject : MonoBehaviour
 {
     [field: SerializeField]
     public RectTransform RectTransform { get; private set; }

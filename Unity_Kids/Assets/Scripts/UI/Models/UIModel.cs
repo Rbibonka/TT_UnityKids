@@ -1,8 +1,9 @@
 using UnityEngine;
-using Handlers;
+using Controllers;
 using Configs;
 using Objects;
 using TMPro;
+using Controller;
 
 namespace Models
 {
@@ -32,22 +33,26 @@ namespace Models
         [SerializeField]
         private GarbageCollectorObject garbageCollectorObject;
 
-        private UIHandler uiHandler;
+        private UIController uiController;
 
-        private ScrollBarHandler scrollBarHandler;
+        private ScrollBarController scrollBarHandler;
 
-        public UIHandler GetHandler(QuadConfig[] quads, QuadObject quadButtonObject, QuadSocketObject quadSocketObject, LocalizationSetuper localizationSetuper)
+        public UIController GetHandler(QuadConfig[] quads, QuadObject quadButtonObject, QuadSocketObject quadSocketObject, LocalizationSetuper localizationSetuper)
         {
-            if (uiHandler == null || !uiHandler.IsInitilized)
+            if (uiController == null || !uiController.IsInitilized)
             {
                 scrollBarHandler = scrollBarModel.GetHandler();
 
-                uiHandler = new();
-                uiHandler.Initialize(quadButtonObject, quadSocketObject, scrollBarHandler, quads, canvas, releasedQuadsParent,
+                uiController = new(quadButtonObject, quadSocketObject, scrollBarHandler, quads, canvas, releasedQuadsParent,
                     playZone, towerHead, canvasRectTransform, txt_Message, localizationSetuper, garbageCollectorObject);
             }
 
-            return uiHandler;
+            return uiController;
+        }
+
+        private void OnDestroy()
+        {
+            uiController.Dispose();
         }
     }
 }

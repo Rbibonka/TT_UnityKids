@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
-using Handlers;
+using Controller;
 
 namespace Models
 {
@@ -12,9 +12,9 @@ namespace Models
         [SerializeField]
         private ScrollRect scrollRect;
 
-        private ScrollBarHandler scrollBarHandler;
+        private ScrollBarController scrollBarHandler;
 
-        public ScrollBarHandler GetHandler()
+        public ScrollBarController GetHandler()
         {
             if (scrollBarHandler == null || !scrollBarHandler.IsInitilized)
             {

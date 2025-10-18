@@ -2,9 +2,9 @@ using Objects;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Handlers
+namespace Controller
 {
-    public sealed class ScrollBarHandler
+    public sealed class ScrollBarController
     {
         private RectTransform contentParent;
 

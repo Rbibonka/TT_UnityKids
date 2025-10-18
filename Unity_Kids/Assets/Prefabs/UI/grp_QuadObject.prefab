@@ -50,9 +50,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 310c32a2b875a5d49b87482c17c2cb83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rectTransform: {fileID: 7788330423038528923}
+  <RectTransform>k__BackingField: {fileID: 7788330423038528923}
   quadImage: {fileID: 3627452048941895839}
-  collider: {fileID: 0}
+  isInSocket: 1
 --- !u!222 &9043653793157463416
 CanvasRenderer:
   m_ObjectHideFlags: 0

@@ -20,7 +20,7 @@ public struct LocalizationConfig
     public string OutsidePlayingAreMessage;
 }
 
-public class LocalizationSetuper : MonoBehaviour
+public sealed class LocalizationSetuper : MonoBehaviour
 {
     [SerializeField]
     public Localization currentLocalization;

@@ -6,19 +6,17 @@ using DG.Tweening;
 
 namespace Objects
 {
-    public sealed class QuadObject : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler
+    public sealed class QuadObject : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler
     {
-        [SerializeField]
-        private RectTransform rectTransform;
+        [field: SerializeField]
+        public RectTransform RectTransform { get; private set; }
 
         [SerializeField]
         private Image quadImage;
 
-        public RectTransform RectTransform => rectTransform;
-
-        public event Action<QuadObject> Release;
-        public new event Action<QuadObject> Destroy;
-        public event Action EndDrag;
+        public event Action<QuadObject> BeginDragged;
+        public event Action<QuadObject> Destroyed;
+        public event Action EndDragged;
         public event Action JumpAnimationEnd;
 
         private Canvas canvas;
@@ -27,16 +25,26 @@ namespace Objects
 
         public int QuadId { get; private set; }
 
+        public bool isInSocket = true;
+
         public void Initialize(int quadId, Canvas canvas)
         {
             QuadId = quadId;
             this.canvas = canvas;
         }
 
+        public void DeleteFromSocket()
+        {
+            isInSocket = false;
+
+            GoToIdleSize();
+        }
+
         public void SetAsTowerPart()
         {
             IsTowerPart = true;
         }
+
         public void SetSprite(Sprite sprite)
         {
             quadImage.sprite = sprite;
@@ -58,7 +66,7 @@ namespace Objects
         {
             transform.DOScale(Vector3.zero, 0.2f).SetEase(Ease.InOutBack)
                 .OnComplete(() => {
-                    Destroy?.Invoke(this);
+                    Destroyed?.Invoke(this);
                 });
         }
 
@@ -72,17 +80,42 @@ namespace Objects
 
         public void OnDrag(PointerEventData eventData)
         {
-            rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
+            RectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
         }
 
         public void OnBeginDrag(PointerEventData eventData)
         {
-            Release?.Invoke(this);
+            BeginDragged?.Invoke(this);
         }
 
         public void OnEndDrag(PointerEventData eventData)
         {
-            EndDrag?.Invoke();
+            EndDragged?.Invoke();
+        }
+
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            if (!isInSocket)
+            {
+                return;
+            }
+
+            transform.DOScale(new Vector3(1.1f, 1.1f, 1.1f), 0.1f).SetEase(Ease.InOutCubic);
+        }
+
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            if (!isInSocket)
+            {
+                return;
+            }
+
+            GoToIdleSize();
+        }
+
+        private void GoToIdleSize()
+        {
+            transform.DOScale(Vector3.one, 0.1f).SetEase(Ease.InOutCubic);
         }
     }
 }
