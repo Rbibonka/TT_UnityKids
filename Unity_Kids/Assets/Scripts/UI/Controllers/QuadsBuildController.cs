@@ -38,6 +38,12 @@ namespace Controllers
             return quads.FindLast(quad => quad.quadObject == quadObject).position;
         }
 
+        public bool Check—ompatibilityQuads(QuadObject quadObject)
+        {
+            // TODO: The place where you can check the possibility of installing a quad.
+            return true;
+        }
+
         public void SetFirstQuad(QuadObject quadObject)
         {
             TowerQuad towerQuad = new TowerQuad()

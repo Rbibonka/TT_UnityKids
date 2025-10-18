@@ -9,17 +9,13 @@ namespace Models
         [SerializeField]
         private RectTransform contentParent;
 
-        [SerializeField]
-        private ScrollRect scrollRect;
-
         private ScrollBarController scrollBarHandler;
 
         public ScrollBarController GetHandler()
         {
             if (scrollBarHandler == null || !scrollBarHandler.IsInitilized)
             {
-                scrollBarHandler = new();
-                scrollBarHandler.Initialize(contentParent, scrollRect);
+                scrollBarHandler = new(contentParent);
             }
 
             return scrollBarHandler;

@@ -2,6 +2,7 @@ using UnityEngine;
 using Objects;
 using System;
 using Utils;
+using Unity.VisualScripting;
 
 namespace Controllers
 {
@@ -126,9 +127,12 @@ namespace Controllers
             if (UIObjectInsideCheck.IsInside(towerHead.RectTransform, currentQuadObject.RectTransform)
                 && towerHead.RectTransform.position.y < currentQuadObject.RectTransform.position.y)
             {
-                quadsBuilder.SetQuad(currentQuadObject);
-                QuadBuilded?.Invoke();
-                return;
+                if (quadsBuilder.CheckÑompatibilityQuads(currentQuadObject))
+                {
+                    quadsBuilder.SetQuad(currentQuadObject);
+                    QuadBuilded?.Invoke();
+                    return;
+                }
             }
 
             currentQuadObject.Destroyed += OnQuadDestroyed;
