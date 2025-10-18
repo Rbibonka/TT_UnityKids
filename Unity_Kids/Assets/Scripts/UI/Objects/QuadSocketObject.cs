@@ -1,10 +1,9 @@
-using DG.Tweening;
 using System;
 using UnityEngine;
 
 namespace Objects
 {
-    public class QuadSocketObject : MonoBehaviour
+    public sealed class QuadSocketObject : MonoBehaviour
     {
         private int quadSocketId;
         private Sprite quadSprite;
@@ -29,12 +28,13 @@ namespace Objects
             currentQuadObject.Initialize(quadSocketId, canvas);
             currentQuadObject.SetSprite(quadSprite);
 
-            currentQuadObject.Release += OnReleased;
+            currentQuadObject.BeginDragged += OnBeginDragged;
         }
 
-        private void OnReleased(QuadObject quadObject)
+        private void OnBeginDragged(QuadObject quadObject)
         {
-            currentQuadObject.Release -= OnReleased;
+            currentQuadObject.BeginDragged -= OnBeginDragged;
+            currentQuadObject.DeleteFromSocket();
             currentQuadObject = null;
 
             CreateQuad();

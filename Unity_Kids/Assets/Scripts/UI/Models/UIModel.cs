@@ -1,7 +1,9 @@
 using UnityEngine;
-using Handlers;
+using Controllers;
 using Configs;
 using Objects;
+using TMPro;
+using Controller;
 
 namespace Models
 {
@@ -16,21 +18,41 @@ namespace Models
         [SerializeField]
         private Transform releasedQuadsParent;
 
-        private UIHandler uiHandler;
+        [SerializeField]
+        private RectTransform playZone;
 
-        private ScrollBarHandler scrollBarHandler;
+        [SerializeField]
+        private TowerHead towerHead;
 
-        public UIHandler GetHandler(QuadConfig[] quads, QuadObject quadButtonObject, QuadSocketObject quadSocketObject)
+        [SerializeField]
+        private RectTransform canvasRectTransform;
+
+        [SerializeField]
+        private TMP_Text txt_Message;
+
+        [SerializeField]
+        private GarbageCollectorObject garbageCollectorObject;
+
+        private UIController uiController;
+
+        private ScrollBarController scrollBarHandler;
+
+        public UIController GetHandler(QuadConfig[] quads, QuadObject quadButtonObject, QuadSocketObject quadSocketObject, LocalizationSetuper localizationSetuper)
         {
-            if (uiHandler == null || !uiHandler.IsInitilized)
+            if (uiController == null || !uiController.IsInitilized)
             {
                 scrollBarHandler = scrollBarModel.GetHandler();
 
-                uiHandler = new();
-                uiHandler.Initialize(quadButtonObject, quadSocketObject, scrollBarHandler, quads, canvas, releasedQuadsParent);
+                uiController = new(quadButtonObject, quadSocketObject, scrollBarHandler, quads, canvas, releasedQuadsParent,
+                    playZone, towerHead, canvasRectTransform, txt_Message, localizationSetuper, garbageCollectorObject);
             }
 
-            return uiHandler;
+            return uiController;
+        }
+
+        private void OnDestroy()
+        {
+            uiController.Dispose();
         }
     }
 }
