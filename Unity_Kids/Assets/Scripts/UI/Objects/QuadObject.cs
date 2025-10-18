@@ -14,9 +14,6 @@ namespace Objects
         [SerializeField]
         private Image quadImage;
 
-        [SerializeField]
-        private BoxCollider2D collider;
-
         public RectTransform RectTransform => rectTransform;
 
         public event Action<QuadObject> Release;
@@ -71,11 +68,6 @@ namespace Objects
             {
                 JumpAnimationEnd?.Invoke();
             });
-        }
-
-        public Collider2D[] TakeCollision()
-        {
-            return Physics2D.OverlapBoxAll(rectTransform.position, Vector3.one, 0f);
         }
 
         public void OnDrag(PointerEventData eventData)

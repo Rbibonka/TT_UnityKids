@@ -1,5 +1,6 @@
 using Configs;
 using Objects;
+using TMPro;
 using UnityEngine;
 
 namespace Handlers
@@ -9,10 +10,11 @@ namespace Handlers
         private ScrollBarHandler scrollBarHandler;
 
         private QuadsHanlder quadsHandler;
+        private LocalizationSetuper localizationSetuper;
+
+        private MessageShower messageShower;
 
         public bool IsInitilized { get; private set; }
-
-        private QuadsBuilder quadsBuilder;
 
         public void Initialize(
             QuadObject quadButtonObject,
@@ -23,19 +25,29 @@ namespace Handlers
             Transform releasedQuadsParent,
             RectTransform playZone,
             TowerHead towerHead,
-            RectTransform canvasRectTransform)
+            RectTransform canvasRectTransform,
+            TMP_Text txt_Message,
+            LocalizationSetuper localizationSetuper,
+            GarbageCollectorObject garbageCollectorObject)
         {
             this.scrollBarHandler = scrollBarHandler;
+            this.localizationSetuper = localizationSetuper;
 
             quadsHandler = new();
-            quadsHandler.Initialize(quadButtonObject, quadSocketObject, quads, canvas, releasedQuadsParent, playZone, towerHead, canvasRectTransform);
+            quadsHandler.Initialize(quadButtonObject, quadSocketObject, quads, canvas, releasedQuadsParent, playZone, towerHead, canvasRectTransform, garbageCollectorObject);
 
-            quadsHandler.QuadSocketReleased += OnQuadSocketReleased;
+            messageShower = new(txt_Message);
+
+            quadsHandler.QuadBuild += OnQuadBuilded;
+            quadsHandler.QuadDestroy += OnQuadDestroyed;
+            quadsHandler.OutsidePlayingArea += OnOutsidePlayingArea;
         }
 
-        public void Loop()
+        public void PrepareUI()
         {
+            localizationSetuper.SetCurrentLocalization(Localization.Ru);
             CreateButtonsQuad();
+            messageShower.StartMessage();
         }
 
         private void CreateButtonsQuad()
@@ -44,9 +56,19 @@ namespace Handlers
             scrollBarHandler.FillQuadButtons(quadsHandler.QuadSocketObjects);
         }
 
-        private void OnQuadSocketReleased(QuadObject quadButtonId)
+        private void OnQuadBuilded()
         {
-            quadsHandler.SetCurrentQuad(quadButtonId);
+            messageShower.Message(localizationSetuper.GetCurrentLocalizationConfig().QuadBuildMessage);
+        }
+
+        private void OnQuadDestroyed()
+        {
+            messageShower.Message(localizationSetuper.GetCurrentLocalizationConfig().QuadDestroyMessage);
+        }
+        
+        private void OnOutsidePlayingArea()
+        {
+            messageShower.Message(localizationSetuper.GetCurrentLocalizationConfig().OutsidePlayingAreMessage);
         }
     }
 }

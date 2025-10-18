@@ -11,10 +11,13 @@ public sealed class Bootstrap : MonoBehaviour
     [SerializeField]
     private MainGameConfig gameConfig;
 
+    [SerializeField]
+    private LocalizationSetuper localizationSetuper;
+
     private void Awake()
     {
-        var uiHandler = uiModel.GetHandler(gameConfig.Quads, gameConfig.QuadObject, gameConfig.QuadSocketObject);
+        var uiHandler = uiModel.GetHandler(gameConfig.Quads, gameConfig.QuadObject, gameConfig.QuadSocketObject, localizationSetuper);
 
-        uiHandler.Loop();
+        uiHandler.PrepareUI();
     }
 }

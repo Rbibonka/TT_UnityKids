@@ -14,18 +14,19 @@ namespace Handlers
         private Transform releasedQuadsParent;
         private RectTransform playZone;
         private RectTransform canvasRectTransform;
+        private GarbageCollectorObject garbageCollectorObject;
+        private TowerHead towerHead;
 
         private QuadsBuilder quadsBuilder;
 
         private QuadObject currentQuadObject;
 
         private bool isFirstBlock = true;
-        UIObjectInsideCheck uiObjectInsideCheck;
-
         public QuadSocketObject[] QuadSocketObjects { get; private set; }
 
-        public event Action<QuadObject> QuadSocketReleased;
-        public event Action<QuadObject> QuadBuilded;
+        public event Action QuadBuild;
+        public event Action QuadDestroy;
+        public event Action OutsidePlayingArea;
 
         public void Initialize(
             QuadObject quadObject,
@@ -35,7 +36,8 @@ namespace Handlers
             Transform releasedQuadsParent,
             RectTransform playZone,
             TowerHead towerHead,
-            RectTransform canvasRectTransform)
+            RectTransform canvasRectTransform,
+            GarbageCollectorObject garbageCollectorObject)
         {
             this.quadObject = quadObject;
             this.quadSocketObject = quadSocketObject;
@@ -44,14 +46,14 @@ namespace Handlers
             this.releasedQuadsParent = releasedQuadsParent;
             this.playZone = playZone;
             this.canvasRectTransform = canvasRectTransform;
+            this.garbageCollectorObject = garbageCollectorObject;
+            this.towerHead = towerHead;
 
             quadsBuilder = new();
             quadsBuilder.Initialize(releasedQuadsParent, towerHead);
 
             quadsBuilder.TowerEmpty += TowerEmpty;
             quadsBuilder.MoveQuadTo += MoveQuadTo;
-
-            uiObjectInsideCheck = new();
         }
 
         public void CreateQuadSockets()
@@ -90,10 +92,14 @@ namespace Handlers
                 return;
             }
 
-            if(!uiObjectInsideCheck.IsFullyInside(playZone, currentQuadObject.RectTransform) || !uiObjectInsideCheck.IsFullyInside(canvasRectTransform, currentQuadObject.RectTransform))
+            if(!UIObjectInsideCheck.IsFullyInside(playZone, currentQuadObject.RectTransform) || !UIObjectInsideCheck.IsFullyInside(canvasRectTransform, currentQuadObject.RectTransform))
             {
+                currentQuadObject.Destroy += QuadDestroyed;
+
                 currentQuadObject.DestroyAnimation();
                 currentQuadObject = null;
+
+                OutsidePlayingArea?.Invoke();
                 return;
             }
 
@@ -102,21 +108,17 @@ namespace Handlers
 
         private void TowerPartHandler()
         {
-            var collisions = currentQuadObject.TakeCollision();
-
-            foreach (var collision in collisions)
+            if (UIObjectInsideCheck.IsInside(garbageCollectorObject.RectTransform, currentQuadObject.RectTransform))
             {
-                if (collision.TryGetComponent<GarbageObject>(out GarbageObject garbageObject))
-                {
-                    currentQuadObject.Destroy += TowerPartDestroyed;
+                currentQuadObject.Destroy += QuadDestroyed;
 
-                    currentQuadObject.MoveTo(garbageObject.RectTransform.position);
-                    currentQuadObject.DestroyAnimation();
+                currentQuadObject.MoveTo(garbageCollectorObject.RectTransform.position);
+                currentQuadObject.DestroyAnimation();
 
-                    quadsBuilder.DeleteQuad(currentQuadObject);
-                    return;
-                }
+                quadsBuilder.DeleteQuad(currentQuadObject);
+                return;
             }
+
             var targetPosition = quadsBuilder.GetQuadTowerPosition(currentQuadObject);
             MoveQuadTo(currentQuadObject, targetPosition);
         }
@@ -141,16 +143,14 @@ namespace Handlers
                 return;
             }
 
-            var collisions = currentQuadObject.TakeCollision();
-
-            foreach (var collision in collisions)
+            if (UIObjectInsideCheck.IsInside(towerHead.rectTransform, currentQuadObject.RectTransform) && towerHead.rectTransform.position.y < currentQuadObject.RectTransform.position.y)
             {
-                if (collision.TryGetComponent<TowerHead>(out TowerHead towerHead))
-                {
-                    quadsBuilder.SetQuad(currentQuadObject);
-                    return;
-                }
+                quadsBuilder.SetQuad(currentQuadObject);
+                QuadBuild?.Invoke();
+                return;
             }
+
+            currentQuadObject.Destroy += QuadDestroyed;
 
             currentQuadObject.DestroyAnimation();
             currentQuadObject = null;
@@ -158,14 +158,16 @@ namespace Handlers
 
         private void OnQuadSocketReleased(QuadObject quad)
         {
-            QuadSocketReleased?.Invoke(quad);
+            SetCurrentQuad(quad);
         }
 
-        private void TowerPartDestroyed(QuadObject quad)
+        private void QuadDestroyed(QuadObject quad)
         {
-            quad.Destroy -= TowerPartDestroyed;
+            quad.Destroy -= QuadDestroyed;
 
-            GameObject.Destroy(quad);
+            QuadDestroy.Invoke();
+
+            GameObject.Destroy(quad.gameObject);
         }
 
         public void Dispose()
