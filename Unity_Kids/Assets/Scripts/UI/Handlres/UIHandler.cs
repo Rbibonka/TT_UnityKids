@@ -20,12 +20,15 @@ namespace Handlers
             ScrollBarHandler scrollBarHandler,
             QuadConfig[] quads,
             Canvas canvas,
-            Transform releasedQuadsParent)
+            Transform releasedQuadsParent,
+            RectTransform playZone,
+            TowerHead towerHead,
+            RectTransform canvasRectTransform)
         {
             this.scrollBarHandler = scrollBarHandler;
 
             quadsHandler = new();
-            quadsHandler.Initialize(quadButtonObject, quadSocketObject, quads, canvas, releasedQuadsParent);
+            quadsHandler.Initialize(quadButtonObject, quadSocketObject, quads, canvas, releasedQuadsParent, playZone, towerHead, canvasRectTransform);
 
             quadsHandler.QuadSocketReleased += OnQuadSocketReleased;
         }
@@ -43,7 +46,7 @@ namespace Handlers
 
         private void OnQuadSocketReleased(QuadObject quadButtonId)
         {
-            quadsHandler.MoveQuadBlock(quadButtonId);
+            quadsHandler.SetCurrentQuad(quadButtonId);
         }
     }
 }

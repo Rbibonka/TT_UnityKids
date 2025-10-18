@@ -14,13 +14,21 @@ namespace Objects
         [SerializeField]
         private Image quadImage;
 
-        public int QuadId { get; private set; }
+        [SerializeField]
+        private BoxCollider2D collider;
+
+        public RectTransform RectTransform => rectTransform;
 
         public event Action<QuadObject> Release;
-
         public new event Action<QuadObject> Destroy;
+        public event Action EndDrag;
+        public event Action JumpAnimationEnd;
 
         private Canvas canvas;
+
+        public bool IsTowerPart { get; private set; }
+
+        public int QuadId { get; private set; }
 
         public void Initialize(int quadId, Canvas canvas)
         {
@@ -28,9 +36,18 @@ namespace Objects
             this.canvas = canvas;
         }
 
+        public void SetAsTowerPart()
+        {
+            IsTowerPart = true;
+        }
         public void SetSprite(Sprite sprite)
         {
             quadImage.sprite = sprite;
+        }
+
+        public void MoveTo(Vector3 targetPoint)
+        {
+            transform.DOMove(targetPoint, 0.2f).SetEase(Ease.InOutSine);
         }
 
         public void SpawnAnimation()
@@ -48,6 +65,19 @@ namespace Objects
                 });
         }
 
+        public void JumpAnimation(Vector3 targetValue)
+        {
+            transform.DOJump(targetValue, 0.5f, 1, 0.3f).SetEase(Ease.InOutBack).OnComplete(() =>
+            {
+                JumpAnimationEnd?.Invoke();
+            });
+        }
+
+        public Collider2D[] TakeCollision()
+        {
+            return Physics2D.OverlapBoxAll(rectTransform.position, Vector3.one, 0f);
+        }
+
         public void OnDrag(PointerEventData eventData)
         {
             rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
@@ -60,7 +90,7 @@ namespace Objects
 
         public void OnEndDrag(PointerEventData eventData)
         {
-            
+            EndDrag?.Invoke();
         }
     }
 }
