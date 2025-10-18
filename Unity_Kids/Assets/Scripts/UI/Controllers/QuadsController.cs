@@ -81,7 +81,7 @@ namespace Controllers
 
         private void TowerPartHandler()
         {
-            if (UIObjectInsideCheck.IsInside(garbageCollectorObject.RectTransform, currentQuadObject.RectTransform))
+            if (UIObjectInsideCheck.IsEllipseTouchingRectangle(garbageCollectorObject.RectTransform, currentQuadObject.RectTransform))
             {
                 currentQuadObject.Destroyed += OnQuadDestroyed;
 

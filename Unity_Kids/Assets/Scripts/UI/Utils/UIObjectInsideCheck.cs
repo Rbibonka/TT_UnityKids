@@ -48,5 +48,36 @@ namespace Utils
             Rect rectB = GetWorldRect(rectTransformB);
             return rectA.Overlaps(rectB);
         }
+
+        public static bool IsEllipseTouchingRectangle(RectTransform ellipseRect, RectTransform rect)
+        {
+            Vector2 ellipseCenter = GetWorldPosition2D(ellipseRect);
+
+            Vector2 ellipseSize = ellipseRect.rect.size;
+            Vector3 ellipseScale = ellipseRect.lossyScale;
+            float radiusX = (ellipseSize.x * ellipseScale.x) * 0.5f;
+            float radiusY = (ellipseSize.y * ellipseScale.y) * 0.5f;
+
+            Vector2 rectCenter = GetWorldPosition2D(rect);
+            Vector2 rectSize = new Vector2(rect.rect.width * rect.lossyScale.x, rect.rect.height * rect.lossyScale.y);
+
+            Vector2 rectMin = rectCenter - rectSize * rect.pivot;
+            Vector2 rectMax = rectMin + rectSize;
+
+            float closestX = Mathf.Clamp(ellipseCenter.x, rectMin.x, rectMax.x);
+            float closestY = Mathf.Clamp(ellipseCenter.y, rectMin.y, rectMax.y);
+
+            Vector2 closestPoint = new Vector2(closestX, closestY);
+            Vector2 delta = closestPoint - ellipseCenter;
+
+            float value = (delta.x * delta.x) / (radiusX * radiusX) + (delta.y * delta.y) / (radiusY * radiusY);
+            return value <= 1f;
+        }
+
+        private static Vector2 GetWorldPosition2D(RectTransform rectTransform)
+        {
+            Vector3 pos = rectTransform.position;
+            return new Vector2(pos.x, pos.y);
+        }
     }
 }
