@@ -6,7 +6,7 @@ using DG.Tweening;
 
 namespace Objects
 {
-    public sealed class QuadObject : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler
+    public sealed class QuadObject : PoolableObject, IDragHandler, IBeginDragHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler
     {
         [field: SerializeField]
         public RectTransform RectTransform { get; private set; }
@@ -31,6 +31,11 @@ namespace Objects
         {
             QuadId = quadId;
             this.canvas = canvas;
+
+            isInSocket = true;
+            IsTowerPart = false;
+
+            transform.localScale = Vector3.one;
         }
 
         public void DeleteFromSocket()
@@ -42,6 +47,7 @@ namespace Objects
 
         public void SetAsTowerPart()
         {
+            isInSocket = false;
             IsTowerPart = true;
         }
 
@@ -62,7 +68,7 @@ namespace Objects
             transform.DOScale(Vector3.one, 0.2f).SetEase(Ease.InOutBack);
         }
 
-        public void DestroyAnimation()
+        public void DestroyWithAnimation()
         {
             transform.DOScale(Vector3.zero, 0.2f).SetEase(Ease.InOutBack)
                 .OnComplete(() => {
@@ -70,7 +76,7 @@ namespace Objects
                 });
         }
 
-        public void JumpAnimation(Vector3 targetValue)
+        public void JumpWithAnimation(Vector3 targetValue)
         {
             transform.DOJump(targetValue, 0.5f, 1, 0.3f).SetEase(Ease.InOutBack).OnComplete(() =>
             {

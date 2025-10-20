@@ -6,10 +6,12 @@ using UnityEngine;
 
 namespace Configs
 {
+    [System.Serializable]
     public struct TowerQuad
     {
         public Vector3 position;
         public QuadObject quadObject;
+        public int quadId;
     }
 }
 
@@ -19,7 +21,7 @@ namespace Controllers
     {
         private Transform quadsTransformParent;
 
-        private List<TowerQuad> quads = new List<TowerQuad>();
+        private List<TowerQuad> quads;
 
         private TowerHead towerHead;
 
@@ -31,6 +33,26 @@ namespace Controllers
         {
             this.quadsTransformParent = quadsTransformParent;
             this.towerHead = towerHead;
+
+            quads = new List<TowerQuad>();
+        }
+
+        public void SetSavedQuads(List<TowerQuad> quads)
+        {
+            this.quads = quads;
+
+            foreach (TowerQuad quad in this.quads)
+            {
+                quad.quadObject.SetAsTowerPart();
+                quad.quadObject.transform.position = quad.position;
+            }
+
+            UpdateTowerHeadPosition(quads[quads.Count - 1].quadObject.RectTransform);
+        }
+
+        public List<TowerQuad> GetTowerQuads()
+        {
+            return quads;
         }
 
         public Vector3 GetQuadTowerPosition(QuadObject quadObject)
@@ -50,6 +72,7 @@ namespace Controllers
             {
                 quadObject = quadObject,
                 position = quadObject.RectTransform.position,
+                quadId = quadObject.QuadId,
             };
 
             var quad = AddQuad(towerQuad);
@@ -61,7 +84,8 @@ namespace Controllers
             TowerQuad towerQuad = new TowerQuad()
             {
                 quadObject = quadObject,
-                position = GetHighterTowerPoint(),
+                position = GetRandomHighterTowerPoint(),
+                quadId = quadObject.QuadId,
             };
 
             var quad = AddQuad(towerQuad);
@@ -78,6 +102,7 @@ namespace Controllers
             {
                 var quad = quads[i - 1];
                 quad.quadObject = quads[i].quadObject;
+                quad.quadId = quads[i].quadId;
 
                 quads[i - 1] = quad;
             }
@@ -116,7 +141,7 @@ namespace Controllers
             UpdateTowerHeadPosition(quad.quadObject.RectTransform);
         }
 
-        private Vector3 GetHighterTowerPoint()
+        private Vector3 GetRandomHighterTowerPoint()
         {
             Vector2 towerHeadSize = towerHead.RectTransform.rect.size;
             float scaleFactorY = towerHead.RectTransform.lossyScale.y;
