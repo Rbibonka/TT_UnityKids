@@ -27,10 +27,17 @@ namespace Controllers
         public event Action<QuadObject, Vector3> MoveQuadTo;
         public event Action<QuadObject, Vector3> JumpQuadTo;
 
-        public QuadsBuildController(Transform quadsTransformParent, TowerHead towerHead)
+        public QuadsBuildController(Transform quadsTransformParent, TowerHead towerHead, List<TowerQuad> savedQuads)
         {
             this.quadsTransformParent = quadsTransformParent;
             this.towerHead = towerHead;
+
+            if (savedQuads.Count < 0)
+            {
+                return;
+            }
+
+
         }
 
         public Vector3 GetQuadTowerPosition(QuadObject quadObject)

@@ -1,8 +1,9 @@
-using UnityEngine;
+using Configs;
 using Objects;
 using System;
+using System.Collections.Generic;
+using UnityEngine;
 using Utils;
-using Unity.VisualScripting;
 
 namespace Controllers
 {
@@ -21,15 +22,17 @@ namespace Controllers
         private bool isFirstBlock = true;
 
         public event Action QuadBuilded;
-        public event Action QuadDestroyed;
         public event Action OutsidePlayingAreaWent;
+
+        public event Action<QuadObject> QuadDestroyed;
 
         public QuadsController(
             Transform releasedQuadsParent,
             RectTransform playZone,
             TowerHead towerHead,
             RectTransform canvasRectTransform,
-            GarbageCollectorObject garbageCollectorObject)
+            GarbageCollectorObject garbageCollectorObject,
+            List<TowerQuad> savedQuads)
         {
             this.releasedQuadsParent = releasedQuadsParent;
             this.playZone = playZone;
@@ -37,7 +40,7 @@ namespace Controllers
             this.garbageCollectorObject = garbageCollectorObject;
             this.towerHead = towerHead;
 
-            quadsBuilder = new(releasedQuadsParent, towerHead);
+            quadsBuilder = new(releasedQuadsParent, towerHead, savedQuads);
 
             quadsBuilder.TowerEmpty += TowerEmpty;
             quadsBuilder.MoveQuadTo += MoveQuadTo;
@@ -69,7 +72,7 @@ namespace Controllers
             {
                 currentQuadObject.Destroyed += OnQuadDestroyed;
 
-                currentQuadObject.DestroyAnimation();
+                currentQuadObject.DestroyWithAnimation();
                 currentQuadObject = null;
 
                 OutsidePlayingAreaWent?.Invoke();
@@ -86,9 +89,7 @@ namespace Controllers
                 currentQuadObject.Destroyed += OnQuadDestroyed;
 
                 currentQuadObject.MoveTo(garbageCollectorObject.RectTransform.position);
-                currentQuadObject.DestroyAnimation();
-
-                QuadDestroyed.Invoke();
+                currentQuadObject.DestroyWithAnimation();
 
                 quadsBuilder.DeleteQuad(currentQuadObject);
                 return;
@@ -105,7 +106,7 @@ namespace Controllers
 
         private void JumpQuadTo(QuadObject quadObject, Vector3 targetPoint)
         {
-            quadObject.JumpAnimation(targetPoint);
+            quadObject.JumpWithAnimation(targetPoint);
         }
 
         public void TowerEmpty()
@@ -136,9 +137,7 @@ namespace Controllers
             }
 
             currentQuadObject.Destroyed += OnQuadDestroyed;
-
-            QuadDestroyed.Invoke();
-            currentQuadObject.DestroyAnimation();
+            currentQuadObject.DestroyWithAnimation();
             currentQuadObject = null;
         }
 
@@ -146,7 +145,7 @@ namespace Controllers
         {
             quad.Destroyed -= OnQuadDestroyed;
 
-            GameObject.Destroy(quad.gameObject);
+            QuadDestroyed?.Invoke(quad);
         }
 
         public void Dispose()

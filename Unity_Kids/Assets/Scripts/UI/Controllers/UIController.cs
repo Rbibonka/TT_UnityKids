@@ -2,6 +2,7 @@ using Configs;
 using Controller;
 using Objects;
 using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -14,9 +15,12 @@ namespace Controllers
         private QuadsController quadsController;
         private LocalizationSetuper localizationSetuper;
 
-        private QuadSocketsController socketsHandler;
+        private QuadSocketsController socketsController;
 
         private MessageShowContoller messageShower;
+
+        private QuadsObjectPool quadsObjectPool;
+        private QuadConfig[] quads;
 
         public bool IsInitilized { get; private set; }
 
@@ -32,17 +36,22 @@ namespace Controllers
             RectTransform canvasRectTransform,
             TMP_Text txt_Message,
             LocalizationSetuper localizationSetuper,
-            GarbageCollectorObject garbageCollectorObject)
+            GarbageCollectorObject garbageCollectorObject,
+            List<TowerQuad> savedQuads)
         {
             this.scrollBarHandler = scrollBarHandler;
             this.localizationSetuper = localizationSetuper;
+            this.quads = quads;
 
-            quadsController = new(releasedQuadsParent, playZone, towerHead, canvasRectTransform, garbageCollectorObject);
+            quadsObjectPool = new(quadObject, releasedQuadsParent);
+
+            quadsController = new(releasedQuadsParent, playZone, towerHead, canvasRectTransform, garbageCollectorObject, savedQuads);
 
             messageShower = new(txt_Message);
 
-            socketsHandler = new(quads, quadSocketObject, quadObject, canvas);
-            socketsHandler.QuadReleased += OnQuadSocketReleased;
+            socketsController = new(quads, quadSocketObject, quadObject, canvas);
+            socketsController.QuadReleased += OnQuadSocketReleased;
+            socketsController.SocketEmpty += OnSocketEmpty;
 
             quadsController.QuadBuilded += OnQuadBuilded;
             quadsController.QuadDestroyed += OnQuadDestroyed;
@@ -53,10 +62,33 @@ namespace Controllers
         {
             localizationSetuper.SetCurrentLocalization(Localization.Ru);
 
-            var quadSockets = socketsHandler.CreateQuadSockets();
+            var quadSockets = socketsController.CreateQuadSockets();
+
+            QuadObject[] socketQuads = new QuadObject[quads.Length];
+
+            for(int i = 0; i < quads.Length; i++)
+            {
+                socketQuads[i] = quadsObjectPool.GetFromPool();
+                socketsController.SetQuadToSocket(i, socketQuads[i]);
+            }
+
             scrollBarHandler.FillQuadButtons(quadSockets);
 
             messageShower.StartMessage();
+        }
+
+        private void OnSocketEmpty(int socketId)
+        {
+            var quad = quadsObjectPool.GetFromPool();
+
+            socketsController.SetQuadToSocket(socketId, quad);
+        }
+
+        private void OnQuadDestroyed(QuadObject quad)
+        {
+            quadsObjectPool.SetToPool(quad);
+
+            messageShower.Message(localizationSetuper.GetCurrentLocalizationConfig().QuadDestroyMessage);
         }
 
         private void OnQuadSocketReleased(QuadObject quad)
@@ -68,11 +100,6 @@ namespace Controllers
         {
             messageShower.Message(localizationSetuper.GetCurrentLocalizationConfig().QuadBuildMessage);
         }
-
-        private void OnQuadDestroyed()
-        {
-            messageShower.Message(localizationSetuper.GetCurrentLocalizationConfig().QuadDestroyMessage);
-        }
         
         private void OnOutsidePlayingAreaWent()
         {
@@ -81,6 +108,9 @@ namespace Controllers
 
         public void Dispose()
         {
+            socketsController.QuadReleased -= OnQuadSocketReleased;
+            socketsController.SocketEmpty -= OnSocketEmpty;
+
             quadsController.QuadBuilded -= OnQuadBuilded;
             quadsController.QuadDestroyed -= OnQuadDestroyed;
             quadsController.OutsidePlayingAreaWent -= OnOutsidePlayingAreaWent;

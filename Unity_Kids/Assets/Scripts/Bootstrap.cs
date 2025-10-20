@@ -16,7 +16,11 @@ public sealed class Bootstrap : MonoBehaviour
 
     private void Awake()
     {
-        var uiHandler = uiModel.GetHandler(gameConfig.Quads, gameConfig.QuadObject, gameConfig.QuadSocketObject, localizationSetuper);
+        JsonDataController jsonData = new();
+
+        var savedQuads = jsonData.LoadData();
+
+        var uiHandler = uiModel.GetHandler(gameConfig.Quads, gameConfig.QuadObject, gameConfig.QuadSocketObject, localizationSetuper, savedQuads);
 
         uiHandler.PrepareUI();
     }

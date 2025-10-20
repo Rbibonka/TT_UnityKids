@@ -9,25 +9,33 @@ namespace Objects
         private Sprite quadSprite;
         private Canvas canvas;
         private QuadObject quadObject;
+        private Transform socketParent;
 
         private QuadObject currentQuadObject;
 
         public event Action<QuadObject> SocketRelease;
 
-        public void Initialize(int quadSocketId, Sprite quadSprite, Canvas canvas, QuadObject quadObject)
+        public event Action<int> SocketEmpty;
+
+        public void Initialize(int quadSocketId, Sprite quadSprite, Canvas canvas, QuadObject quadObject, Transform socketParent)
         {
             this.quadSocketId = quadSocketId;
             this.quadSprite = quadSprite;
             this.canvas = canvas;
             this.quadObject = quadObject;
+            this.socketParent = socketParent;
         }
 
-        public void CreateQuad()
+        public void SetQuad(QuadObject quadObject)
         {
-            currentQuadObject = Instantiate(quadObject, transform);
+            currentQuadObject = quadObject;
+            currentQuadObject.RectTransform.position = socketParent.position;
+            currentQuadObject.transform.SetParent(socketParent);
+
             currentQuadObject.Initialize(quadSocketId, canvas);
             currentQuadObject.SetSprite(quadSprite);
 
+            currentQuadObject.SpawnAnimation();
             currentQuadObject.BeginDragged += OnBeginDragged;
         }
 
@@ -37,9 +45,7 @@ namespace Objects
             currentQuadObject.DeleteFromSocket();
             currentQuadObject = null;
 
-            CreateQuad();
-            currentQuadObject.SpawnAnimation();
-
+            SocketEmpty.Invoke(quadSocketId);
             SocketRelease.Invoke(quadObject);
         }
     }

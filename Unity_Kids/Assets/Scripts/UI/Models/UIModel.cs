@@ -4,6 +4,7 @@ using Configs;
 using Objects;
 using TMPro;
 using Controller;
+using System.Collections.Generic;
 
 namespace Models
 {
@@ -37,14 +38,14 @@ namespace Models
 
         private ScrollBarController scrollBarHandler;
 
-        public UIController GetHandler(QuadConfig[] quads, QuadObject quadButtonObject, QuadSocketObject quadSocketObject, LocalizationSetuper localizationSetuper)
+        public UIController GetHandler(QuadConfig[] quads, QuadObject quadButtonObject, QuadSocketObject quadSocketObject, LocalizationSetuper localizationSetuper, List<TowerQuad> savedQuads)
         {
             if (uiController == null || !uiController.IsInitilized)
             {
                 scrollBarHandler = scrollBarModel.GetHandler();
 
                 uiController = new(quadButtonObject, quadSocketObject, scrollBarHandler, quads, canvas, releasedQuadsParent,
-                    playZone, towerHead, canvasRectTransform, txt_Message, localizationSetuper, garbageCollectorObject);
+                    playZone, towerHead, canvasRectTransform, txt_Message, localizationSetuper, garbageCollectorObject, savedQuads);
             }
 
             return uiController;
