@@ -13,18 +13,10 @@ namespace Controllers
         private string currentMessage;
 
         private bool isNewMessageReady;
-        private CancellationTokenSource cts;
 
         public MessageShowContoller(TMP_Text text)
         {
             this.text = text;
-        }
-
-        public void StartMessage()
-        {
-            cts = new();
-
-            AnimationText(cts.Token).Forget();
         }
 
         public void Message(string message)
@@ -34,11 +26,11 @@ namespace Controllers
             isNewMessageReady = true;
         }
 
-        private async UniTask AnimationText(CancellationToken ct)
+        public async UniTask ShowAnimationTextLoop(CancellationToken ct)
         {
             text.transform.localScale = Vector3.zero;
 
-            while (true)
+            while (!ct.IsCancellationRequested)
             {
                 await UniTask.WaitUntil(() => isNewMessageReady);
 
@@ -48,7 +40,7 @@ namespace Controllers
 
                 await UniTask.WhenAll(text.transform.DOScale(Vector3.one, 0.2f).SetEase(Ease.InOutBounce).WithCancellation(ct));
 
-                await UniTask.WaitForSeconds(1f);
+                await UniTask.WaitForSeconds(0.6f);
 
                 await UniTask.WhenAll(text.transform.DOScale(Vector3.zero, 0.2f).SetEase(Ease.InOutBounce).WithCancellation(ct));
             }
