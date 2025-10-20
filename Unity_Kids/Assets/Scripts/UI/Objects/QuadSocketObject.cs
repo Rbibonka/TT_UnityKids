@@ -6,9 +6,6 @@ namespace Objects
     public sealed class QuadSocketObject : MonoBehaviour
     {
         private int quadSocketId;
-        private Sprite quadSprite;
-        private Canvas canvas;
-        private QuadObject quadObject;
         private Transform socketParent;
 
         private QuadObject currentQuadObject;
@@ -17,12 +14,9 @@ namespace Objects
 
         public event Action<int> SocketEmpty;
 
-        public void Initialize(int quadSocketId, Sprite quadSprite, Canvas canvas, QuadObject quadObject, Transform socketParent)
+        public void Initialize(int quadSocketId, Transform socketParent)
         {
             this.quadSocketId = quadSocketId;
-            this.quadSprite = quadSprite;
-            this.canvas = canvas;
-            this.quadObject = quadObject;
             this.socketParent = socketParent;
         }
 
@@ -31,9 +25,6 @@ namespace Objects
             currentQuadObject = quadObject;
             currentQuadObject.RectTransform.position = socketParent.position;
             currentQuadObject.transform.SetParent(socketParent);
-
-            currentQuadObject.Initialize(quadSocketId, canvas);
-            currentQuadObject.SetSprite(quadSprite);
 
             currentQuadObject.SpawnAnimation();
             currentQuadObject.BeginDragged += OnBeginDragged;

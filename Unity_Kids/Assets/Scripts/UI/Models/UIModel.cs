@@ -50,10 +50,5 @@ namespace Models
 
             return uiController;
         }
-
-        private void OnDestroy()
-        {
-            uiController.Dispose();
-        }
     }
 }

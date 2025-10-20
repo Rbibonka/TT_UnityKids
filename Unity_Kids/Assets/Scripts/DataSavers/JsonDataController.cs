@@ -16,7 +16,6 @@ public class JsonDataController
     {
         string json = JsonUtility.ToJson(new Wrapper<TowerQuad> { Items = dataList }, true);
         File.WriteAllText(filePath, json);
-        Debug.Log("Данные сохранены по пути: " + filePath);
     }
 
     public List<TowerQuad> LoadData()
@@ -29,7 +28,7 @@ public class JsonDataController
         }
         else
         {
-            Debug.LogWarning("Файл не найден");
+            Debug.LogWarning("File does not exist");
             return new List<TowerQuad>();
         }
     }

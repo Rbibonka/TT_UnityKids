@@ -21,8 +21,9 @@ namespace Controllers
 
         private bool isFirstBlock = true;
 
-        public event Action QuadBuilded;
-        public event Action OutsidePlayingAreaWent;
+        public event Action MessageQuadBuilded;
+        public event Action MessageOutsidePlayingAreaWent;
+        public event Action MessageQuadDestroyed;
 
         public event Action<QuadObject> QuadDestroyed;
 
@@ -31,8 +32,8 @@ namespace Controllers
             RectTransform playZone,
             TowerHead towerHead,
             RectTransform canvasRectTransform,
-            GarbageCollectorObject garbageCollectorObject,
-            List<TowerQuad> savedQuads)
+            GarbageCollectorObject garbageCollectorObject
+            )
         {
             this.releasedQuadsParent = releasedQuadsParent;
             this.playZone = playZone;
@@ -40,7 +41,7 @@ namespace Controllers
             this.garbageCollectorObject = garbageCollectorObject;
             this.towerHead = towerHead;
 
-            quadsBuilder = new(releasedQuadsParent, towerHead, savedQuads);
+            quadsBuilder = new(releasedQuadsParent, towerHead);
 
             quadsBuilder.TowerEmpty += TowerEmpty;
             quadsBuilder.MoveQuadTo += MoveQuadTo;
@@ -59,6 +60,13 @@ namespace Controllers
             currentQuadObject.EndDragged += OnQuadEndDragged;
         }
 
+        public void AddSavedQuads(List<TowerQuad> towerQuads)
+        {
+            isFirstBlock = false;
+
+            quadsBuilder.SetSavedQuads(towerQuads);
+        }
+
         private void OnQuadEndDragged()
         {
             if (currentQuadObject.IsTowerPart)
@@ -75,7 +83,7 @@ namespace Controllers
                 currentQuadObject.DestroyWithAnimation();
                 currentQuadObject = null;
 
-                OutsidePlayingAreaWent?.Invoke();
+                MessageOutsidePlayingAreaWent?.Invoke();
                 return;
             }
 
@@ -90,6 +98,8 @@ namespace Controllers
 
                 currentQuadObject.MoveTo(garbageCollectorObject.RectTransform.position);
                 currentQuadObject.DestroyWithAnimation();
+
+                MessageQuadDestroyed?.Invoke();
 
                 quadsBuilder.DeleteQuad(currentQuadObject);
                 return;
@@ -121,7 +131,7 @@ namespace Controllers
                 isFirstBlock = false;
 
                 quadsBuilder.SetFirstQuad(currentQuadObject);
-                QuadBuilded?.Invoke();
+                MessageQuadBuilded?.Invoke();
                 return;
             }
 
@@ -131,7 +141,7 @@ namespace Controllers
                 if (quadsBuilder.Check—ompatibilityQuads(currentQuadObject))
                 {
                     quadsBuilder.SetQuad(currentQuadObject);
-                    QuadBuilded?.Invoke();
+                    MessageQuadBuilded?.Invoke();
                     return;
                 }
             }
@@ -139,6 +149,8 @@ namespace Controllers
             currentQuadObject.Destroyed += OnQuadDestroyed;
             currentQuadObject.DestroyWithAnimation();
             currentQuadObject = null;
+
+            MessageQuadDestroyed?.Invoke();
         }
 
         private void OnQuadDestroyed(QuadObject quad)
@@ -146,6 +158,11 @@ namespace Controllers
             quad.Destroyed -= OnQuadDestroyed;
 
             QuadDestroyed?.Invoke(quad);
+        }
+
+        public List<TowerQuad> GetTowerQuads()
+        {
+            return quadsBuilder.GetTowerQuads();
         }
 
         public void Dispose()

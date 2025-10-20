@@ -1,6 +1,7 @@
 using UnityEngine;
 using Models;
 using Configs;
+using Controllers;
 
 [DefaultExecutionOrder(-1)]
 public sealed class Bootstrap : MonoBehaviour
@@ -14,14 +15,22 @@ public sealed class Bootstrap : MonoBehaviour
     [SerializeField]
     private LocalizationSetuper localizationSetuper;
 
+    private JsonDataController jsonData;
+    private UIController controller;
+
     private void Awake()
     {
-        JsonDataController jsonData = new();
-
+        jsonData = new();
         var savedQuads = jsonData.LoadData();
 
-        var uiHandler = uiModel.GetHandler(gameConfig.Quads, gameConfig.QuadObject, gameConfig.QuadSocketObject, localizationSetuper, savedQuads);
+        controller = uiModel.GetHandler(gameConfig.Quads, gameConfig.QuadObject, gameConfig.QuadSocketObject, localizationSetuper, savedQuads);
 
-        uiHandler.PrepareUI();
+        controller.PrepareUI();
+    }
+
+    private void OnDisable()
+    {
+        jsonData.SaveData(controller.GetTowerQuads());
+        controller.Dispose();
     }
 }

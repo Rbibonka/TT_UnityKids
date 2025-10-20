@@ -34,6 +34,8 @@ namespace Objects
 
             isInSocket = true;
             IsTowerPart = false;
+
+            transform.localScale = Vector3.one;
         }
 
         public void DeleteFromSocket()
@@ -45,6 +47,7 @@ namespace Objects
 
         public void SetAsTowerPart()
         {
+            isInSocket = false;
             IsTowerPart = true;
         }
 
