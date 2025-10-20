@@ -41,7 +41,7 @@ namespace Controllers
         {
             this.quads = quads;
 
-            foreach (TowerQuad quad in quads)
+            foreach (TowerQuad quad in this.quads)
             {
                 quad.quadObject.SetAsTowerPart();
                 quad.quadObject.transform.position = quad.position;
@@ -72,7 +72,7 @@ namespace Controllers
             {
                 quadObject = quadObject,
                 position = quadObject.RectTransform.position,
-                quadId = quadObject.QuadId
+                quadId = quadObject.QuadId,
             };
 
             var quad = AddQuad(towerQuad);
@@ -85,7 +85,7 @@ namespace Controllers
             {
                 quadObject = quadObject,
                 position = GetRandomHighterTowerPoint(),
-                quadId = quadObject.QuadId
+                quadId = quadObject.QuadId,
             };
 
             var quad = AddQuad(towerQuad);
@@ -102,6 +102,7 @@ namespace Controllers
             {
                 var quad = quads[i - 1];
                 quad.quadObject = quads[i].quadObject;
+                quad.quadId = quads[i].quadId;
 
                 quads[i - 1] = quad;
             }
